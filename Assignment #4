@@ -1,0 +1,371 @@
+// ============================================================
+// Name    : [Angelle Sumrall]
+// Course  : COSC 1437 — Programming Fundamentals II
+// Date    : [6/8/2026]
+// Program : Chapter 4 Major Project
+// Option  : [A — Hotel Billing]
+// Purpose : [Self service device, allowing someone to book a room for x amount of nights. Member status included.]
+// ============================================================
+
+// ==========================================================
+// Section 1 Pseudocode design block
+// ==========================================================
+// Start programe
+    // Step 1: Define dicounted and threshold Constants
+    //Set group_tier_1_limit = 10
+    //set group_tier_2_limit = 20
+    //set group_tier_3_limit = 30
+
+    //set group_tier_1_discount = 0.10
+    //set group_tier_2_discount = 0.20
+    //set group_tier_3_discount = 0.30
+
+    //set duration_threshold = 3
+    //set duration_discount_rate = 0.05
+   
+    // Step 2: Initialize Input Variables
+        //Set gustName = ""
+        //set baseRatePerNight = 0.0
+        //set roomsReserved = 0
+        //set nightsStayed = 0
+        //set salesTaxRateInput = 0.0
+   
+    // step 3: Welcome User and Gather Details
+        //dispay "Grand Vista Hotel Billing System"
+        //display "Enter Primary Guest Name: "
+        //read guestName from user Input
+   
+     // step 4: Secure Valid Nightly Room Rate
+        //display "Enter the nightly rate per room ($): "
+        //read baseRatePerNight
+        //while baseRatePerNight is not a number or baseRatePerNight <= 0.0 
+        //display "invalid input. Please enter a positive dollar amount: "
+        //clear input error flags
+        //ignore remaining invalid characters in stream
+       //read baseRatePerNight
+
+    // Step 5: Secure Valid Room Count
+        //display "Enter number of rooms booked: "
+        //read roomsReserved 
+        //while roomsReserved is not an integer or roomsReserved <= 0
+        //display "Invalid input. Please enter a whole number greater then 0: "
+        //clear input error flags
+        //ignore remaining invalid characters in stream
+        //read roomsReserved
+
+    // Step 6: Secure Valid Stay duration
+        //display "Enter number of nights: "
+        //read nightsStayed
+        //while nightsStayed is not an integer or nightsStayed <=
+        //display "Invalid input. Please enter a whole number greater then 0: "
+        //clear input error flags
+        //ignore remaining invalid characters in stream
+        //read nightsStayed
+
+    // Step 7: Secure Valid Sale Tax Rate Percentage
+        //display "Enter the sales tax rate (%): "
+        //read salesTaxRateInput
+        //while salesTaxRateInput is not a number or salesTaxRateInput <= 0.0
+        //display "Invalid input. Please enter a non negative tax percentage: "
+        //clear input error flags
+        //ignore remaining invalid characters in stream
+        //read salesTaxRateInput
+
+    // Step 8: Determine Group Discount Based on Quantities (Secion 5 logic)
+        //set groupDiscountPercentage = 0.0
+        //discountTierInteger = 0
+        //if roomsReserved >= group_tier_3_limit then
+        //set discountTierInteger = 3
+        
+        //else if roomsReserved >= group_tier_2_limit and roomsReserved < group_tier_3_limit then
+        //set groupDiscountPercentage = group_tier_2_discount
+        //set discountTierInteger = 2
+        
+        //else if roomsReserved >= group_tier_1_limit then
+        //set groupDiscountPercentage = group_tier_1_discount
+        //set discountTierInteger = 1
+        //else 
+        //set groupDiscountPercentage = 0.0
+        //set discountTierInteger = 0
+
+    // step 9: Preform Compound Financial Calculations
+        //set grossTotal = roomsReserved * nightsStayed * baseRatePerNight
+        //set groupDiscountAmount = grossTotal * groupDiscountPercentage
+        //set intermediateSubtotal = grossTotal - groupDiscountAmount
+
+        //set durationDiscountAmount = 0.0
+        //if nightsStayed >= duration_threshold then
+        //set durationDiscountAmount = intermediateSubtotal *duration_discount_rate
+
+        //set totalDiscountAmount = groupDiscountAmount + durationDiscountAmount
+        //set subtotal = (grossTotal - totalDiscountAmount) + operationalSurcharge
+        
+        //set operationalTaxRate = salesTaxRateInput / 100.0
+        //set taxAmount = subtotal * operationalTaxRate
+        //set netTotalCombined = subtotal + taxAmount
+
+    // Step 10: Switch Statment Messaging Evaluation
+        //switch on discountTierInteger
+        //case 3: print "Platinum Tier" message
+        //case 2: print "Gold Tier" message
+        //case 1: print "Silver Tier" message
+        //default: print "Standard Tier" message
+    // Step 11: Print Formatted Receipt
+        //display "Final billing recepit"
+        //set output stream format to fixed point with 2 decimal places using alignment mask
+        //display nightly rate, discount percent, rooms, nights, subtotal, tax sales, total amount default
+
+
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <limits>
+#include <cmath>
+using namespace std;
+int main () {
+
+    const int Group_Tier_1_Limit = 10;
+    const int Group_Tier_2_Limit = 20;
+    const int Group_Tier_3_Limit = 30;
+
+    const double Group_Tier_1_Discount = 0.10;
+    const double Group_Tier_2_Discount = 0.20;
+    const double Group_Tier_3_Discount = 0.30;
+
+    const int duration_Treshold = 3;
+    const double Duration_discount_Rate = 0.05;
+
+    string guestName = "";
+    double baseRatePerNight = 0.0;
+    int roomsReserved = 0;
+    int nightsStayed = 0;
+    double salesTaxRateInput = 0.0;
+// ==========================================================
+// Section 2: Input and validation
+// ==========================================================
+
+    cout << "==================================================" << endl;
+    cout << "      Grand Vista Hoel Billing System             " << endl;
+    cout << "==================================================" << endl << endl;
+
+    cout << "Enter primary guest name: ";
+    cin >> guestName;
+
+    cout << "Enter nightly rate per room ($): ";
+    while (!(cin >> baseRatePerNight) || baseRatePerNight <= 0.0) {
+        cout << "Invalid input. Please enter a positive dollar amount: " << endl;
+        cin.clear();
+        cin.ignore(100,'\n');
+    }
+
+    cout << "Enter number of rooms booked: "; 
+    while (!(cin >> roomsReserved) || roomsReserved <= 0) { 
+    cout << "Invalid input. Please enter a whole number greater than 0: " << endl;
+    cin.clear(); 
+    cin.ignore(100, '\n'); 
+    }
+
+    cout << "Enter number of nights: "; 
+    while (!(cin >> nightsStayed) || nightsStayed <= 0) { 
+    cout << "Invalid input. Please enter a whole number greater than 0: " << endl;
+    cin.clear(); 
+    cin.ignore(100, '\n'); 
+    }
+
+    cout << "Enter sales tax rate (%): "; 
+    while (!(cin >> salesTaxRateInput) || salesTaxRateInput <= 0) { 
+    cout << "Invalid input. Please enter a whole number greater than 0: " << endl;
+    cin.clear(); 
+    cin.ignore(100, '\n'); 
+    }
+
+    // ==========================================================
+    // Section 3: Operator precedence reference
+    // ==========================================================
+    /*
+    Precedence      Operator(s)     Category        Associativity
+    ---------------------------------------------------------------
+    1 (highest)     !               Logical NOT     Right to Left
+    2               *, /, %         Multiplicative  Left to Right
+    3               +, -            Additive        Left to Right
+    4               <, <=, >, >=    Relational      Left to Right
+    5               ==, !=          Equality        Left to Right
+    6               &&              Logical AND     Left to Right
+    7 (lowest)      ||              Logic OR        Left to Right
+
+    Expression: !(roomsReserved > 0) || (baseRatePerNight >= 50.0 && roomsReserved != nightsStayed)
+
+    Sample value chosen:
+    - roomsReserved = 6
+    - baseRatePerNight = 120.0
+    - nightsStayed= 4
+
+    Step by step evaluation process:
+    1. Parenthessis priority. Inside left: (roomsReserved > 0) -> (6 > 0) -> true
+    Expression :!(true) || (baseRatePerNight >= 50.0 && roomsReserved !=nightStayed)
+    2. Evaluate Precedence 1 (Logical NOT): !(true) -> false
+    Expression: false || (baseRatePerNight >= 50.0 && roomsReserved !=nightStayed)
+    3. Evaluate Precedence 4 (Relational) inside right block: 120.0 >= 50.0) -> true
+    Expression: false || (true && roomsReserved != nightsStayed)
+    4. Evaluate Precedence 5 (Equality) inside right block: (6 != 4) -> true
+    Expression: false || (true && true)
+    5. Evaluate Precedence 6 (logical AND): (true && true) -> true
+    Expression: false || true
+    6. Evaluate Precedence 7 (Logic OR): false || true -> true
+    
+    Final Result: True
+    */
+
+
+    // =================================================================
+    // Section 4/6: core logic and relations/logical operator showcase
+    // =================================================================
+
+    double groupDiscountPercentage = 0.0;
+    int discountTierInteger = 0;
+    bool qualifiesForDurationDiscount = false;
+
+    if (roomsReserved >= Group_Tier_3_Limit) {
+        groupDiscountPercentage = Group_Tier_3_Discount;
+        discountTierInteger = 3;
+    }
+    else if (roomsReserved >= Group_Tier_2_Limit) {
+        groupDiscountPercentage = Group_Tier_2_Discount;
+        discountTierInteger = 2;
+    }
+    else if (roomsReserved >= Group_Tier_1_Limit) {
+        groupDiscountPercentage = Group_Tier_1_Discount;
+        discountTierInteger = 1;
+    }
+    else {
+        groupDiscountPercentage = 0.0;
+        discountTierInteger = 0;
+    }
+
+    if (nightsStayed <= 0 || nightsStayed > duration_Treshold) {
+        qualifiesForDurationDiscount = true;
+    }
+    else if (nightsStayed >= duration_Treshold) {
+        qualifiesForDurationDiscount = true;
+    }
+
+    double operationalSurcharge = 0.0;
+    bool balanceThresholdMet = (roomsReserved !=  nightsStayed);
+    if (!balanceThresholdMet) {
+        operationalSurcharge = 25.00;
+    }
+
+    double grossTotal = roomsReserved * nightsStayed * baseRatePerNight;
+    double groupDiscountAmount = grossTotal * groupDiscountPercentage;
+    double intermediateSubtotal = grossTotal - groupDiscountAmount;
+    double durationDiscountAmount = 0.0;
+
+    if (qualifiesForDurationDiscount) {
+        durationDiscountAmount = intermediateSubtotal * Duration_discount_Rate;
+    }
+
+    double totalDiscountAmount = groupDiscountAmount + durationDiscountAmount;
+    double subtotal = (grossTotal - totalDiscountAmount) + operationalSurcharge;
+    double operationalTaxRate = salesTaxRateInput / 100.0;
+    double taxAmount = subtotal * operationalTaxRate;
+    double netTotalCombined = subtotal + taxAmount;
+    double calculatedEffectiveDiscountPrice = 0.0;
+
+    if (grossTotal > 0.0) {
+        calculatedEffectiveDiscountPrice = (totalDiscountAmount / grossTotal) * 100.0;
+    }
+
+// ==========================================================
+// Section 5/6: switch statments
+// ==========================================================
+   bool isTaxExemptStatus = false;
+   const double epsilon = 0.001;
+   if (abs(taxAmount - 0.0) < epsilon) {
+    isTaxExemptStatus = true;
+   }
+
+    cout << "------------------------" << endl;
+    cout << " Acount Dispatch Status" << endl;
+    cout << "------------------------" << endl;
+
+    switch (discountTierInteger) {
+        case 3:
+            cout << "Tier level: Platinum" << endl;
+            cout << "Qualifications: Reserved 30 or more rooms (" << roomsReserved << " booked). Platinum Tier unlocked. Maximum discount applied."<< endl;
+            break;
+        case 2:
+            cout << "Tier level: Gold"<< endl;
+            cout << "Qualifications: Reserved 20 to 29 rooms (" << roomsReserved << " booked). Gold Tier unlocked. Midtear discount applied."<< endl;
+            break;
+        case 1: 
+            cout << "Tier level: Silver" << endl;
+            cout << "Qualifications: Reserved 10 to 19 rooms (" << roomsReserved << " booked). Silver Tier unlocked. Base discount applied."<< endl;
+            break;
+        case 0:
+            cout << "Tier level: Standard"<< endl;
+            cout << "Qualifications: Reserved 9 rooms or less (" << roomsReserved << " booked). Standard Tier, no discount applied."<< endl;
+    }
+        if (qualifiesForDurationDiscount) {
+            cout << "Etended stay bonus: stayed 3+ nights (" << nightsStayed << " total nights). Extra 5 percent componding rate applied."<< endl;
+    }
+        if (operationalSurcharge > 0.0) {
+            cout << "NOTICE: A synchronizaton charged applied to account of $25.00."<< endl;
+    }
+        if (isTaxExemptStatus) {
+            cout << "Tax Exemption Confirmed: Verified tax assesment ealuates cleanly to zero"<< endl;
+    }
+        cout << "------------------------------------------------------------------------------------------" << endl;
+    // ==========================================================
+    // Section 7: floating poing bug guard
+    // ==========================================================
+    /*
+    Why == is unreliable for floating point comparison:
+    Computers cannot store fractional decimal numbers perfectly because they use binary memory slots.
+    This limitation causes tiny fractions of a decimal to get shopped off during calculations.
+    Due to the hidden mismatches, using == will eventually produce wrong numbers and misscalculations.
+
+    What you should use instead:
+    I prefer to use epsilon comparion which is also known as tolerance band technique.
+    Epsilon subtracts 2 decimal variables to find the raw difference bewtween them.
+    Then it checks if that isolated difference is smaller then the threshold variable.
+
+    The specific espilon value I chose and why:
+    I chose the value of 0.001 for the billing system.
+    Its a tenth of a penny which is less then any cent that exists.
+    It safely stops computer rounding bus without changing the number itself.
+    */
+
+// ==========================================================
+// Section 8: Formatted output/receipt
+// ==========================================================
+    cout << endl << "=============================================" << endl;
+    cout << "            Final billing Receipt            " << endl;
+    cout << "=============================================" << endl;
+
+    cout << "Registered Guest: " << guestName << endl;
+    cout << "Rooms Reserved: " << roomsReserved << " room(s)" << endl;
+    cout << "Nights Stayed: " << nightsStayed << " night(s)" << endl;
+    cout << "-------------------------------------------------------" << endl;
+
+    cout << fixed << setprecision(2);
+
+    cout << "Nightly Rate per Room: $" << baseRatePerNight << endl;
+    cout << "Gross Base Calculations: $" << grossTotal << endl;
+    cout << "Total Discount Percent: " << calculatedEffectiveDiscountPrice << "%" << endl;
+    cout << "Discounts Extracted: -$" << totalDiscountAmount << endl;
+
+    if (operationalSurcharge > 0.0) {
+    cout << "synchronization Surcharge: +$" << operationalSurcharge << endl;
+}
+
+    cout << "-------------------------------------------------------" << endl;
+    cout << "Subtotal (Before Tax): $" << subtotal << endl;
+    cout << "Sales Tax (" << (int)salesTaxRateInput << "%): +$" << taxAmount << endl;
+    cout << "-------------------------------------------------------" << endl;
+    cout << "TOTAL AMOUNT DUE: $" << netTotalCombined << endl;
+    cout << "=========================================================" << endl;
+    cout << "           Thank you for choosing Grand Vista!           " << endl;
+    cout << "=========================================================" << endl;
+
+    return 0;
+}
