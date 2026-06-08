@@ -145,38 +145,34 @@ int main () {
 // ==========================================================
 
     cout << "==================================================" << endl;
-    cout << "      Grand Vista Hoel Billing System             " << endl;
+    cout << "      Grand Vista Hotel Billing System             " << endl;
     cout << "==================================================" << endl << endl;
 
     cout << "Enter primary guest name: ";
     cin >> guestName;
 
     cout << "Enter nightly rate per room ($): ";
-    while (!(cin >> baseRatePerNight) || baseRatePerNight <= 0.0) {
+    if (!(cin >> baseRatePerNight) || baseRatePerNight <= 0.0) {
         cout << "Invalid input. Please enter a positive dollar amount: " << endl;
-        cin.clear();
-        cin.ignore(100,'\n');
+        return 1;
     }
 
     cout << "Enter number of rooms booked: "; 
-    while (!(cin >> roomsReserved) || roomsReserved <= 0) { 
+    if (!(cin >> roomsReserved) || roomsReserved <= 0) { 
     cout << "Invalid input. Please enter a whole number greater than 0: " << endl;
-    cin.clear(); 
-    cin.ignore(100, '\n'); 
+    return 1;
     }
 
     cout << "Enter number of nights: "; 
-    while (!(cin >> nightsStayed) || nightsStayed <= 0) { 
+    if (!(cin >> nightsStayed) || nightsStayed <= 0) { 
     cout << "Invalid input. Please enter a whole number greater than 0: " << endl;
-    cin.clear(); 
-    cin.ignore(100, '\n'); 
+    return 1;
     }
 
     cout << "Enter sales tax rate (%): "; 
-    while (!(cin >> salesTaxRateInput) || salesTaxRateInput <= 0) { 
+    if (!(cin >> salesTaxRateInput) || salesTaxRateInput <= 0) { 
     cout << "Invalid input. Please enter a whole number greater than 0: " << endl;
-    cin.clear(); 
-    cin.ignore(100, '\n'); 
+    return 1;
     }
 
     // ==========================================================
