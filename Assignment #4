@@ -369,3 +369,23 @@ int main () {
 
     return 0;
 }
+
+// ==========================================================
+// Section 9: Bug Risks
+// ==========================================================
+/*
+    1. Floating point equality bug
+    Decimal numbers can cause unexpected rounding errors when saved into a computer's memery.
+    Comparing them directly, using an equal sign often fails even when the number looks identical.
+    The program fixes this bug by checking if the difference between the 2 numbers is tiny enough to ignore.
+
+    2. Division by 0 bug
+    Dividng any number by 0 is mathimatically impossible and crashes software instantly.
+    If a guest books 0 rooms for 0 nights, the total cost is 0 
+    The program prevents crashing by checking if the number is grater then 0 otherwise producing an "invalid try again" message, before dividing.
+
+    3. Missing breka in switch bug
+    A switch statment checks conditions in a list from top to bottom.
+    If you forget to add a stop sign, the progam w ill keep running and print every message below it.
+    The program uses break statments after each tier to stop the code from printing the wrong reward message.
+*/
